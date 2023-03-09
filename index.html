@@ -34,7 +34,7 @@
 
       if (!command) return false;
 
-      send(JSON.stringify(command.split(' ')));
+      send(command.split(' '));
     }
 
     function upload(form) {
@@ -46,14 +46,19 @@
     }
 
     function send(data, url = '') {
-      fetch('http://localhost:3000/' + url, {
+      let options = {
         method: 'POST',
-        headers: {
+        body: JSON.stringify(data)
+      };
+
+      if (!url.includes('upload')) {
+        options.headers = {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        },
-        body: data
-      })
+        };
+      }
+
+      fetch('http://localhost:3000/' + url, options)
         .then(response => response.json())
         .then(response => {
           try {

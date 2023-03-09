@@ -11,8 +11,8 @@ const ordinal = require('./ordinal');
 
 
 app.use(cors());
-// app.use(express.json()) // for parsing application/json
-// app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
 
@@ -51,12 +51,6 @@ app.all('/fileupload', (req, res) => {
 // === COMMANDS
 
 app.all('/', (req, res) => {
-  if (typeof req.body === 'string') {
-    try {
-      req.body = JSON.parse(req.body);
-    } catch (err) {}
-  }
-
   if (req.body && Array.isArray(req.body)) {
     ordinal.rpc(req.body).then(data => {
       res.json({
