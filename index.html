@@ -34,7 +34,7 @@
 
       if (!command) return false;
 
-      send(command.split(' '));
+      send(JSON.stringify(command.split(' ')));
     }
 
     function upload(form) {
@@ -52,7 +52,7 @@
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: data
       })
         .then(response => response.json())
         .then(response => {
