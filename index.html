@@ -22,11 +22,10 @@
   <br>
 
   <h4>3) File upload</h4>
-  <small>Use javascript to avoid page refresh..</small>
 
-  <form action="http://localhost:3000/fileupload" method="post" enctype="multipart/form-data">
-    <input type="file" name="ordinalupload">
-    <input type="submit">
+  <form onsubmit="upload(); return false;" enctype="multipart/form-data">
+    <input id="ordinaluploadinput" type="file" name="ordinalupload">
+    <button>Upload</button>
   </form>
 
   <script>
@@ -35,13 +34,27 @@
 
       if (!command) return false;
 
-      fetch('http://localhost:3000', {
+      send(command.split(' '));
+    }
+
+    function upload() {
+      let files = document.getElementById("ordinaluploadinput");
+      let data = new FormData();
+
+      data.append('ordinalupload', files[0]);
+      send(data, 'fileupload');
+
+      return false;
+    }
+
+    function send(data, url = '') {
+      fetch('http://localhost:3000/' + url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(command.split(' '))
+        body: JSON.stringify(data)
       })
         .then(response => response.json())
         .then(response => {
