@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 // === FILE UPLOAD
 
 app.all('/fileupload', (req, res) => {
-  let form = formidable({ multiples: true });
+  let form = new formidable.IncomingForm();
 
   form.parse(req, function (err, fields, files) {
     if (err) {
