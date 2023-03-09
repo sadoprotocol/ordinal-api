@@ -38,14 +38,18 @@ function rpc(arg = []) {
     }
 
     // Replace $ORDINAL_UPLOAD_DIR with proper path
-    for (let i = 0; i < arg.length; i++) {
-      if (arg[i].includes('server') || arg[i].includes('preview')) {
-        throw new Error(arg[i] + ' command is blocked.');
-      }
+    try {
+      for (let i = 0; i < arg.length; i++) {
+        if (arg[i].includes('server') || arg[i].includes('preview')) {
+          throw new Error(arg[i] + ' command is blocked.');
+        }
 
-      if (arg[i].includes('$ORDINAL_UPLOAD_DIR')) {
-        arg[i] = arg[i].replace('$ORDINAL_UPLOAD_DIR/', ORDINAL_UPLOAD_DIR);
+        if (arg[i].includes('$ORDINAL_UPLOAD_DIR')) {
+          arg[i] = arg[i].replace('$ORDINAL_UPLOAD_DIR/', ORDINAL_UPLOAD_DIR);
+        }
       }
+    } catch (err) {
+      reject(err);
     }
 
     commandArg = commandArg.concat(arg);
