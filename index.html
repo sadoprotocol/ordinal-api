@@ -44,7 +44,16 @@
         body: JSON.stringify(command.split(' '))
       })
         .then(response => response.json())
-        .then(response => console.log(response))
+        .then(response => {
+          try {
+            response.rdata = JSON.parse(response.rdata);
+          } catch (err) {}
+
+          console.log(response.message);
+          if (response.rdata) {
+            console.log(response.rdata);
+          }
+        })
     }
   </script>
 </body>
