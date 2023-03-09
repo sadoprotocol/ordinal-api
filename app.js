@@ -22,20 +22,29 @@ app.all('/fileupload', (req, res) => {
   let form = new formidable.IncomingForm();
 
   form.parse(req, function (err, fields, files) {
-    ordinal.upload(files).then(result => {
-      res.json({
-        success: true,
-        message: 'Uploaded',
-        rdata: result
-      });
-    }).catch(err => {
-      let error =err.message || err ;
+    if (err) {
+      let error = err.message || err ;
 
       res.status(500).json({
         success: false,
         message: error
       });
-    })
+    } else {
+      ordinal.upload(files).then(result => {
+        res.json({
+          success: true,
+          message: 'Uploaded',
+          rdata: result
+        });
+      }).catch(err => {
+        let error = err.message || err ;
+
+        res.status(500).json({
+          success: false,
+          message: error
+        });
+      })
+    }
   });
 });
 

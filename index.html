@@ -38,10 +38,10 @@
     }
 
     function upload() {
-      let files = document.getElementById("ordinaluploadinput");
+      let file = document.getElementById("ordinaluploadinput").files[0];;
       let data = new FormData();
 
-      data.append('ordinalupload', files[0]);
+      data.append('ordinalupload', file);
       send(data, 'fileupload');
 
       return false;
