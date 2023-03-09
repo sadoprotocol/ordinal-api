@@ -23,7 +23,7 @@
 
   <h4>3) File upload</h4>
 
-  <form onsubmit="upload(); return false;" enctype="multipart/form-data">
+  <form onsubmit="upload(this); return false;" enctype="multipart/form-data">
     <input id="ordinaluploadinput" type="file" name="ordinalupload">
     <button>Upload</button>
   </form>
@@ -37,11 +37,9 @@
       send(command.split(' '));
     }
 
-    function upload() {
-      let file = document.getElementById("ordinaluploadinput").files[0];;
-      let data = new FormData();
+    function upload(form) {
+      let data = new FormData(form);
 
-      data.append('ordinalupload', file);
       send(data, 'fileupload');
 
       return false;
