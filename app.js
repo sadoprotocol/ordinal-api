@@ -23,9 +23,18 @@ app.all('/fileupload', (req, res) => {
 
   form.parse(req, function (err, fields, files) {
     ordinal.upload(files).then(result => {
-      res.json(result);
+      res.json({
+        success: true,
+        message: 'Uploaded',
+        rdata: result
+      });
     }).catch(err => {
-      res.status(500).json(err.message || err);
+      let error =err.message || err ;
+
+      res.status(500).json({
+        success: false,
+        message: error
+      });
     })
   });
 });
@@ -35,12 +44,24 @@ app.all('/fileupload', (req, res) => {
 app.all('/', (req, res) => {
   if (req.body && Array.isArray(req.body)) {
     ordinal.rpc(req.body).then(data => {
-      res.json(data);
+      res.json({
+        success: true,
+        message: 'Command successful',
+        rdata: data
+      });
     }).catch(err => {
-      res.status(500).json(err);
+      let error =err.message || err ;
+
+      res.status(500).json({
+        success: false,
+        message: error
+      });
     });
   } else {
-    res.status(500).json('Invalid request. Missing some parameters?');
+    res.status(500).json({
+      success: false,
+      message: 'Invalid request. Missing some parameters?'
+    });
   }
 });
 
