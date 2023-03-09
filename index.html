@@ -1,0 +1,48 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Ordinal API</title>
+</head>
+<body>
+  <h4>1) Create tunnel via SSH</h4>
+  <code style="padding: 10px; background-color: #222; color: #fff;">ssh -N -T -L 3000:localhost:3000 thinkpad@18.142.57.58</code>
+
+  <br>
+  <br>
+  <br>
+
+  <h4>2) Command execution:</h4>
+  <code>$ ord -t </code><input type="text" id="commands" value="help wallet" style="display: inline-block; width: 600px;">
+  <button onclick="execute()">Execute</button>
+  <p>Read the script in this file.<br>Check console what's going on..</p>
+
+  <br>
+
+  <h4>3) File upload</h4>
+  <small>Use javascript to avoid page refresh..</small>
+
+  <form action="http://localhost:3000/fileupload" method="post" enctype="multipart/form-data">
+    <input type="file" name="ordinalupload">
+    <input type="submit">
+  </form>
+
+  <script>
+    function execute() {
+      let command = document.getElementById('commands').value.trim();
+
+      if (!command) return false;
+
+      fetch('http://localhost:3000', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(command.split(' '))
+      })
+        .then(response => response.json())
+        .then(response => console.log(response))
+    }
+  </script>
+</body>
+</html>
