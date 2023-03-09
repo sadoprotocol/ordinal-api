@@ -2,7 +2,7 @@
 
 const { spawn } = require("child_process");
 const fs = require('fs');
-const crypto = require('crypto-js');
+const sha256 = require('crypto-js/sha256');
 
 const cookiePath = process.env.COOKIE_PATH;
 const network = process.env.NETWORK;
@@ -86,11 +86,7 @@ function upload(files) {
       let oldpath = files[uploadKey].filepath;
 
       let fileBuffer = fs.readFileSync(oldpath);
-      let hashSum = crypto.createHash('sha256');
-
-      hashSum.update(fileBuffer);
-
-      let hex = hashSum.digest('hex');
+      let hex = sha256(fileBuffer).toString();
       let newFilename = hex + '.' + fileType;
       let newpath = ORDINAL_UPLOAD_DIR + newFilename;
 
