@@ -1,3 +1,6 @@
 PORT=3000
 NETWORK="testnet"
-
+# /home/bitcoin/.bitcoin/testnet3/.cookie
+COOKIE_PATH=""
+UPLOAD_DIR=""
+UPLOAD_KEY="ordinalupload"

@@ -4,15 +4,18 @@
 <title>Ordinal API</title>
 </head>
 <body>
-  <h4>1) Create tunnel via SSH</h4>
-  <code style="padding: 10px; background-color: #222; color: #fff;">ssh -N -T -L 3000:localhost:3000 thinkpad@18.142.57.58</code>
+  <h4>1) Create the following tunnels via SSH:</h4>
+  <code style="padding: 10px; background-color: #222; color: #fff;">ssh -N -T -L 18332:localhost:18332 ubuntu@13.236.232.45 -i &lt;/path/to/identity_file&gt;</code>
+  <br>
+  <br>
+  <code style="padding: 10px; background-color: #222; color: #fff;">ssh -N -T -L 3000:localhost:3000 ubuntu@13.236.232.45 -i &lt;/path/to/identity_file&gt;</code>
 
   <br>
   <br>
   <br>
 
   <h4>2) Command execution:</h4>
-  <code>$ ord -t </code><input type="text" id="commands" value="help wallet" style="display: inline-block; width: 600px;">
+  <code>$ ord </code><input type="text" id="commands" value="help wallet" style="display: inline-block; width: 600px;">
   <button onclick="execute()">Execute</button>
   <p>Read the script in this file.<br>Check console what's going on..</p>
 
