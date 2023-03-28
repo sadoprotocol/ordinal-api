@@ -8,6 +8,7 @@ const cookiePath = process.env.COOKIE_PATH;
 const network = process.env.NETWORK;
 const uploadKey = process.env.UPLOAD_KEY;
 const ORDINAL_UPLOAD_DIR = process.env.UPLOAD_DIR || __dirname + '/uploaded/';
+const ordCommand = process.env.COMMAND || "ord";
 
 const networkFlag = {
   "mainnet": "",
@@ -54,7 +55,7 @@ function rpc(arg = []) {
 
     commandArg = commandArg.concat(arg);
 
-    const exec = spawn("ord", commandArg);
+    const exec = spawn(ordCommand, commandArg);
 
     let output = '';
 
