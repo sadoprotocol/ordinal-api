@@ -4,6 +4,7 @@
 # where the one who is indexing will keep the data in a separate location.
 # Once done with indexing, it should transfer to the original location
 
+# TODO
 NETWORK="regtest" # Leave empty string for Mainnet
 DEFAULT_DATA_DIR="/home/bitcoin/.local/share/ord/"
 ALT_DATA_DIR="/home/bitcoin/ord-data/"
@@ -18,7 +19,8 @@ else
    # <nothing> : mainnet
 
    echo "Begin indexing.."
-   ord@afwcxx -r --data-dir=$ALT_ORD_DIR --index-sats index
+   # TODO
+   ord@afwcxx -r --data-dir=$ALT_DATA_DIR --index-sats index
 
    echo "Transferring to original location"
    \cp $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb.new"
