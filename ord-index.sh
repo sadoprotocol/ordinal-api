@@ -21,8 +21,8 @@ else
    ord@afwcxx -r --data-dir=$ALT_ORD_DIR --index-sats index
 
    echo "Transferring to original location"
-   \cp "$ALT_DATA_DIRindex.redb" "$DEFAULT_DATA_DIRindex.redb.new"
-   mv -f "$DEFAULT_DATA_DIRindex.redb.new" "$DEFAULT_DATA_DIRindex.redb"
+   \cp $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb.new"
+   mv -f $DEFAULT_DATA_DIR$NETWORK"/index.redb.new" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
    echo "Done.."
 fi
