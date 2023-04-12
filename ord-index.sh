@@ -6,8 +6,8 @@
 
 # TODO
 NETWORK="regtest" # Leave empty string for Mainnet
-DEFAULT_DATA_DIR="/home/bitcoin/.local/share/ord/"
-ALT_DATA_DIR="/home/bitcoin/ord-data/"
+DEFAULT_DATA_DIR="/home/bitcoin-regtest/.local/share/ord/"
+ALT_DATA_DIR="/home/bitcoin-regtest/ord-data/"
 
 if ps -fu $UID | grep "ord" | grep "data-dir" | grep -q "index-sats index"
 then 
