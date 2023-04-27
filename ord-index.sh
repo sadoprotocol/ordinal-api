@@ -22,6 +22,11 @@ fi
 
 touch "$ALT_DATA_DIR$NETWORK/lock"
 
+# TODO
+HEIGHT=$(bitcoin-cli --regtest getblockcount)
+
+echo "HEIGHT is $HEIGHT"
+
 echo "Begin indexing.."
 # TODO
 # Change the -r flag for NETWORK
@@ -34,11 +39,6 @@ echo "REORG is $REORG"
 
 if [ -z "$REORG" ]
 then
-  # TODO
-  HEIGHT=$(bitcoin-cli --regtest getblockcount)
-
-  echo "HEIGHT is $HEIGHT"
-
   MOD=$(expr $HEIGHT % 5)
 
   echo "MOD is $MOD"
