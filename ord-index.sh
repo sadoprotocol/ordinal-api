@@ -46,16 +46,22 @@ then
   if [ $MOD -eq 0 ];
   then
     STALE=$(expr $HEIGHT - 50)
+    STALEMIN=$(expr $HEIGHT - 1000)
     echo "STALE is $STALE"
+    echo "STALEMIN is $STALEMIN"
     echo "Creating snapshot"
     \cp $ALT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb.$HEIGHT"
 
-    if test -f "$ALT_DATA_DIR$NETWORK/index.redb.$STALE"; then
-      echo "Removing stale"
-      rm $ALT_DATA_DIR$NETWORK"/index.redb.$STALE"
-      echo "Removed stale"
-    fi
-
+    while [ $STALE -ge $STALEMIN ]
+    do
+      echo "CURRENT STALE is $STALE"
+      if test -f "$ALT_DATA_DIR$NETWORK/index.redb.$STALE"; then
+        echo "Removing stale $STALE"
+        rm $ALT_DATA_DIR$NETWORK"/index.redb.$STALE"
+        echo "Removed stale"
+      fi
+      ((STALE=STALE-1))
+    done
   fi
 
   echo "Transferring to original location"
