@@ -5,6 +5,11 @@
 
 ## Deployment
 
+### Requirement
+
+- An indexed ord server
+- An ord wallet
+
 <br />
 
 ### Configuration
@@ -45,7 +50,7 @@ $ ssh -N -T -L 3000:localhost:3000 username@host -i /path/to/identity
 // Access localy via http://localhost:3000
 ```
 
-Example is available if you open `index.html`.
+Example is available if you open [index.html](https://github.com/cakespecial/ordinal-api/blob/main/index.html).
 
 
 <br />
