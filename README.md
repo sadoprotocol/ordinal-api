@@ -24,7 +24,7 @@ $ npm install
 
 Start:
 
-```javascript
+```sh
 $ npm start
 
 # Optional: OR background it with screen
@@ -37,7 +37,7 @@ $ ./screen-ordinal-api.sh
 ## Usage
 
 Because this is a temporary wrapper to the ord cli, this application should not be available to public.\
-If it's behind a firewall, simplest option is to access using `SSH` local forwarding:\
+If it's behind a firewall, simplest option is to access using `SSH` local forwarding:
 
 ```sh
 $ ssh -N -T -L 3000:localhost:3000 username@host -i /path/to/identity
