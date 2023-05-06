@@ -33,7 +33,7 @@ echo "Begin indexing.."
 # -r : regtest
 # -t : testnet3
 # <nothing> : mainnet
-REORG=$(ord@afwcxx -r --data-dir=$ALT_DATA_DIR --index-sats index | grep -P 'reorg')
+REORG=$(ord@afwcxx -r --data-dir=$ALT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
 
 echo "REORG is $REORG"
 
@@ -68,8 +68,13 @@ then
   \cp $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb.new"
   mv -f $DEFAULT_DATA_DIR$NETWORK"/index.redb.new" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
+  if test -f "$ALT_DATA_DIR$NETWORK/reorg"; then
+    rm "$ALT_DATA_DIR$NETWORK/reorg"
+  fi
+
   echo "Done.."
 else
+  touch "$ALT_DATA_DIR$NETWORK/reorg"
   echo "Has reorg.."
 fi
 
