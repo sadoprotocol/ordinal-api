@@ -45,7 +45,7 @@ then
 
   if [ $MOD -eq 0 ];
   then
-    STALE=$(expr $HEIGHT - 50)
+    STALE=$(expr $HEIGHT - 100)
     STALEMIN=$(expr $HEIGHT - 1000)
     echo "STALE is $STALE"
     echo "STALEMIN is $STALEMIN"
