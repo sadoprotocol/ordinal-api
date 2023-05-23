@@ -4,13 +4,13 @@
 # where the one who is indexing will keep the data in a separate location.
 # Once done with indexing, it should transfer to the original location
 
-if [ ! -f "./ord-index-config" ]
+if [ ! -f "./.ord-index-config" ]
 then
   echo "No config file found.."
   exit
 fi
 
-source "./ord-index-config"
+source "./.ord-index-config"
 
 if ps -fu $UID | grep "ord" | grep "data-dir" | grep -q "index-sats index"
 then 
