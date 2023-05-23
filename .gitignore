@@ -1,4 +1,5 @@
 .env
+.ord-index-config
 package-lock.json
 node_modules
 uploaded
