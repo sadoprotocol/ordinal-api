@@ -4,11 +4,13 @@
 # where the one who is indexing will keep the data in a separate location.
 # Once done with indexing, it should transfer to the original location
 
-# TODO
-NETWORK="regtest" # OR "testnet3", "" for Mainnet
-DEFAULT_DATA_DIR="/home/bitcoin-regtest/.local/share/ord/"
-ALT_DATA_DIR="/home/bitcoin-regtest/ord-data/"
-ALT_DUP_DATA_DIR="/home/bitcoin-regtest/ord-data-dup/"
+if [ ! -f "./ord-index-config" ]
+then
+  echo "No config file found.."
+  exit
+fi
+
+source "./ord-index-config"
 
 if ps -fu $UID | grep "ord" | grep "data-dir" | grep -q "index-sats index"
 then 
@@ -43,11 +45,30 @@ then
   rsync -a $DEFAULT_DATA_DIR$NETWORK"/index.redb" $ALT_DUP_DATA_DIR$NETWORK"/index.redb"
 fi
 
+# ==
+
+BITCOIN_CLI_OPTIONS=()
+ORD_CLI_OPTIONS=()
+
+if [ $NETWORK = "regtest" ]; then
+  BITCOIN_CLI_OPTIONS=( --regtest )
+  ORD_CLI_OPTIONS=( -r )
+elif [ $NETWORK = "testnet3" ]; then
+  BITCOIN_CLI_OPTIONS=( --testnet )
+  ORD_CLI_OPTIONS=( -t )
+elif [ $NETWORK = "" ]; then
+  BITCOIN_CLI_OPTIONS=()
+  ORD_CLI_OPTIONS=()
+else
+  echo "Invalid network"
+  exit
+fi
+
+
 # SETUP END ==
 
 
-# TODO
-HEIGHT=$(bitcoin-cli --regtest getblockcount)
+HEIGHT=$(bitcoin-cli "${BITCOIN_CLI_OPTIONS[@]}" getblockcount)
 
 echo "HEIGHT is $HEIGHT"
 
@@ -56,12 +77,8 @@ rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
 echo "Begin indexing.."
-# TODO
-# Change the -r flag for NETWORK
-# -r : regtest
-# -t : testnet3
-# <nothing> : mainnet
-REORG=$(ord@afwcxx -r --data-dir=$ALT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+
+REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
 
 echo "REORG is $REORG"
 
@@ -71,12 +88,7 @@ then
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
   ln $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
-  # TODO
-  # Change the -r flag for NETWORK
-  # -r : regtest
-  # -t : testnet3
-  # <nothing> : mainnet
-  REORG=$(ord@afwcxx -r --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+  REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
 
   # HARDLINK SWITCHER - 2
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
@@ -89,14 +101,14 @@ then
 
   if [ $MOD -eq 0 ];
   then
-    STALE=$(expr $HEIGHT - 100)
-    STALEMIN=$(expr $HEIGHT - 1000)
+    STALE=$(expr $HEIGHT - 200)
+    STALEMAX=$(expr $HEIGHT - 1000)
     echo "STALE is $STALE"
-    echo "STALEMIN is $STALEMIN"
+    echo "STALEMAX is $STALEMAX"
     echo "Creating snapshot"
     rsync -a $ALT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb.$HEIGHT"
 
-    while [ $STALE -ge $STALEMIN ]
+    while [ $STALE -ge $STALEMAX ]
     do
       echo "CURRENT STALE is $STALE"
       if test -f "$ALT_DATA_DIR$NETWORK/index.redb.$STALE"; then
