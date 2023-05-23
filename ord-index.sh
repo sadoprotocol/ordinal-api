@@ -50,20 +50,18 @@ fi
 BITCOIN_CLI_OPTIONS=()
 ORD_CLI_OPTIONS=()
 
-if [ $NETWORK = "regtest" ]; then
-  BITCOIN_CLI_OPTIONS=( --regtest )
-  ORD_CLI_OPTIONS=( -r )
-elif [ $NETWORK = "testnet3" ]; then
-  BITCOIN_CLI_OPTIONS=( --testnet )
-  ORD_CLI_OPTIONS=( -t )
-elif [ $NETWORK = "" ]; then
-  BITCOIN_CLI_OPTIONS=()
-  ORD_CLI_OPTIONS=()
-else
-  echo "Invalid network"
-  exit
+if [ ! -z "${NETWORK}" ]; then
+  if [ $NETWORK = "regtest" ]; then
+    BITCOIN_CLI_OPTIONS=( --regtest )
+    ORD_CLI_OPTIONS=( -r )
+  elif [ $NETWORK = "testnet3" ]; then
+    BITCOIN_CLI_OPTIONS=( --testnet )
+    ORD_CLI_OPTIONS=( -t )
+  else
+    echo "Invalid network"
+    exit
+  fi
 fi
-
 
 # SETUP END ==
 
