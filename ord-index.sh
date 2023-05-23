@@ -8,6 +8,7 @@
 NETWORK="regtest" # OR "testnet3", "" for Mainnet
 DEFAULT_DATA_DIR="/home/bitcoin-regtest/.local/share/ord/"
 ALT_DATA_DIR="/home/bitcoin-regtest/ord-data/"
+ALT_DUP_DATA_DIR="/home/bitcoin-regtest/ord-data-dup/"
 
 if ps -fu $UID | grep "ord" | grep "data-dir" | grep -q "index-sats index"
 then 
@@ -20,12 +21,39 @@ if test -f "$ALT_DATA_DIR$NETWORK/lock"; then
   exit
 fi
 
+# LOCK
 touch "$ALT_DATA_DIR$NETWORK/lock"
+
+
+# == SETUP
+
+mkdir -p $ALT_DATA_DIR$NETWORK
+
+if [ ! -f $ALT_DATA_DIR$NETWORK"/index.redb" ]
+then
+  rsync -a $DEFAULT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb"
+fi
+
+# ==
+
+mkdir -p $ALT_DUP_DATA_DIR$NETWORK
+
+if [ ! -f $ALT_DUP_DATA_DIR$NETWORK"/index.redb" ]
+then
+  rsync -a $DEFAULT_DATA_DIR$NETWORK"/index.redb" $ALT_DUP_DATA_DIR$NETWORK"/index.redb"
+fi
+
+# SETUP END ==
+
 
 # TODO
 HEIGHT=$(bitcoin-cli --regtest getblockcount)
 
 echo "HEIGHT is $HEIGHT"
+
+# HARDLINK SWITCHER - 2
+rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
 echo "Begin indexing.."
 # TODO
@@ -39,7 +67,23 @@ echo "REORG is $REORG"
 
 if [ -z "$REORG" ]
 then
-  MOD=$(expr $HEIGHT % 5)
+  # HARDLINK SWITCHER - 1
+  rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+  ln $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+
+  # TODO
+  # Change the -r flag for NETWORK
+  # -r : regtest
+  # -t : testnet3
+  # <nothing> : mainnet
+  REORG=$(ord@afwcxx -r --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+
+  # HARDLINK SWITCHER - 2
+  rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+  ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+
+  # SNAPSHOT PROCESS
+  MOD=$(expr $HEIGHT % 30)
 
   echo "MOD is $MOD"
 
@@ -50,7 +94,7 @@ then
     echo "STALE is $STALE"
     echo "STALEMIN is $STALEMIN"
     echo "Creating snapshot"
-    \cp $ALT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb.$HEIGHT"
+    rsync -a $ALT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb.$HEIGHT"
 
     while [ $STALE -ge $STALEMIN ]
     do
@@ -64,9 +108,8 @@ then
     done
   fi
 
-  echo "Transferring to original location"
-  \cp $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb.new"
-  mv -f $DEFAULT_DATA_DIR$NETWORK"/index.redb.new" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+  # UNLOCK
+  rm "$ALT_DATA_DIR$NETWORK/lock"
 
   if test -f "$ALT_DATA_DIR$NETWORK/reorg"; then
     rm "$ALT_DATA_DIR$NETWORK/reorg"
@@ -74,8 +117,11 @@ then
 
   echo "Done.."
 else
+  echo "PENDING: Perform self reorg recovery"
+
+  # UNLOCK
+  rm "$ALT_DATA_DIR$NETWORK/lock"
+
   touch "$ALT_DATA_DIR$NETWORK/reorg"
   echo "Has reorg.."
 fi
-
-rm "$ALT_DATA_DIR$NETWORK/lock"
