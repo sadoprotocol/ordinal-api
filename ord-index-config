@@ -2,3 +2,4 @@ NETWORK="regtest" # OR "testnet3", "" for Mainnet
 DEFAULT_DATA_DIR="/home/bitcoin-regtest/.local/share/ord/"
 ALT_DATA_DIR="/home/bitcoin-regtest/ord-data/"
 ALT_DUP_DATA_DIR="/home/bitcoin-regtest/ord-data-dup/"
+SNAPSHOT_DATA_DIR="/home/bitcoin-regtest/ord-snapshot/"

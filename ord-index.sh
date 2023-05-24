@@ -1,19 +1,18 @@
 #!/bin/bash
-# Note:
-# This index checking is only used for double database location
-# where the one who is indexing will keep the data in a separate location.
-# Once done with indexing, it should transfer to the original location
 
-if [ ! -f "./.ord-index-config" ]
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+if [ ! -f "$SCRIPT_DIR/.ord-index-config" ]
 then
   echo "No config file found.."
   exit
 fi
 
-source "./.ord-index-config"
+source "$SCRIPT_DIR/.ord-index-config"
 
-if ps -fu $UID | grep "ord" | grep "data-dir" | grep -q "index-sats index"
-then 
+RUNNING=$(ps -fu $UID | grep "ord" | grep "data-dir" | grep -v "$SNAPSHOT_DATA_DIR" | grep "index-sats index")
+
+if [ ! -z "${RUNNING}" ]; then 
   echo "Still running.."
   exit
 fi
@@ -23,13 +22,13 @@ if test -f "$ALT_DATA_DIR$NETWORK/lock"; then
   exit
 fi
 
+mkdir -p $ALT_DATA_DIR$NETWORK
+
 # LOCK
 touch "$ALT_DATA_DIR$NETWORK/lock"
 
 
 # == SETUP
-
-mkdir -p $ALT_DATA_DIR$NETWORK
 
 if [ ! -f $ALT_DATA_DIR$NETWORK"/index.redb" ]
 then
@@ -91,32 +90,6 @@ then
   # HARDLINK SWITCHER - 2
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
   ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
-
-  # SNAPSHOT PROCESS
-  MOD=$(expr $HEIGHT % 30)
-
-  echo "MOD is $MOD"
-
-  if [ $MOD -eq 0 ];
-  then
-    STALE=$(expr $HEIGHT - 200)
-    STALEMAX=$(expr $HEIGHT - 1000)
-    echo "STALE is $STALE"
-    echo "STALEMAX is $STALEMAX"
-    echo "Creating snapshot"
-    rsync -a $ALT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb.$HEIGHT"
-
-    while [ $STALE -ge $STALEMAX ]
-    do
-      echo "CURRENT STALE is $STALE"
-      if test -f "$ALT_DATA_DIR$NETWORK/index.redb.$STALE"; then
-        echo "Removing stale $STALE"
-        rm $ALT_DATA_DIR$NETWORK"/index.redb.$STALE"
-        echo "Removed stale"
-      fi
-      ((STALE=STALE-1))
-    done
-  fi
 
   # UNLOCK
   rm "$ALT_DATA_DIR$NETWORK/lock"
