@@ -53,27 +53,33 @@ $ ssh -N -T -L 3000:localhost:3000 username@host -i /path/to/identity
 // Access localy via http://localhost:3000
 ```
 
-Example is available in [index.html](https://github.com/cakespecial/ordinal-api/blob/main/index.html).
+Example is available in [index.html](https://github.com/sadoprotocol/ordinal-api/blob/main/index.html).
+
+<br />
+<br />
 
 ### Background Indexer
 
-The `ord` cli command is using [Cake's version](https://github.com/cakespecial/ord) and on-fly indexing has been disabled to improve API request responses.\
-Simply run the following using a cron job for every 5 minutes.
+The `ord` cli command is using [Sado's version](https://github.com/sadoprotocol/ord) and on-fly indexing has been disabled to improve API request responses.\
+Simply run the following using a cron job for every 3 minutes.
 
 ```sh
-# At the time being, parameter to run on network specific
-# is hardcoded. They can be identified with the // TODO
+# Copy the config and change the values accordingly
+$ cp ord-index-config .ord-index-config
 
 $ ./ord-index.sh
 ```
 
 <br />
-<br />
 
-## Pending items
+### Background Snapshots
 
-- Run network specific by command flag
-- Replace screen with SystemD or some kind of daemon management
-- Create alias for ord executable file, `ord@cake` to be able to use with `ord@afwcxx`
-- Git workflow deploy server
+At the moment, `ord` stops indexing process if there is a reorg.\
+Therefore, we create snapshots every 30 blocks. Approximately once in every 6 hours.\
+Simply run the following using a cron job for every 5 minutes.
 
+```sh
+# Make sure you have done the configuration in the background indexer process above.
+
+$ ./ord-snapshot.sh
+```
