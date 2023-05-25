@@ -23,6 +23,7 @@ if test -f "$ALT_DATA_DIR$NETWORK/lock"; then
 fi
 
 mkdir -p $ALT_DATA_DIR$NETWORK
+mkdir -p $SNAPSHOT_DATA_DIR$NETWORK
 
 # LOCK
 touch "$ALT_DATA_DIR$NETWORK/lock"
@@ -33,6 +34,11 @@ touch "$ALT_DATA_DIR$NETWORK/lock"
 if [ ! -f $ALT_DATA_DIR$NETWORK"/index.redb" ]
 then
   rsync -a $DEFAULT_DATA_DIR$NETWORK"/index.redb" $ALT_DATA_DIR$NETWORK"/index.redb"
+fi
+
+if [ ! -f $SNAPSHOT_DATA_DIR$NETWORK"/index.redb" ]
+then
+  rsync -a $DEFAULT_DATA_DIR$NETWORK"/index.redb" $SNAPSHOT_DATA_DIR$NETWORK"/index.redb"
 fi
 
 # ==
