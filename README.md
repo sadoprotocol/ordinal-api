@@ -58,19 +58,6 @@ Example is available in [index.html](https://github.com/sadoprotocol/ordinal-api
 <br />
 <br />
 
-### Background Indexer
-
-The `ord` cli command is using [Sado's version](https://github.com/sadoprotocol/ord) and on-fly indexing has been disabled to improve API request responses.\
-Simply run the following using a cron job for every 3 minutes.
-
-```sh
-# Copy the config and change the values accordingly
-$ cp ord-index-config .ord-index-config
-
-$ ./ord-index.sh
-```
-
-<br />
 
 ### Background Snapshots
 
@@ -79,7 +66,23 @@ Therefore, we create snapshots every 30 blocks. Approximately once in every 6 ho
 Simply run the following using a cron job for every 5 minutes.
 
 ```sh
-# Make sure you have done the configuration in the background indexer process above.
+# Copy the config and change the values accordingly
+$ cp ord-index-config .ord-index-config
 
 $ ./ord-snapshot.sh
+```
+
+<br />
+
+### Background Indexer
+
+> Run the snapshot command first before executing this indexer command.
+
+The `ord` cli command is using [Sado's version](https://github.com/sadoprotocol/ord) and on-fly indexing has been disabled to improve API request responses.\
+Simply run the following using a cron job for every 3 minutes.
+
+```sh
+# Make sure you have done the config in the background snapshot process above.
+
+$ ./ord-index.sh
 ```
