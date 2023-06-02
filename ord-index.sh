@@ -81,7 +81,11 @@ ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
 echo "Begin indexing.."
 
+echo "indexing" > $ALT_DATA_DIR"/height"
+
 REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+
+echo "$HEIGHT" > $ALT_DATA_DIR"/height"
 
 echo "REORG is $REORG"
 
@@ -100,7 +104,11 @@ then
     exit
   fi
 
+  echo "indexing" > $ALT_DUP_DATA_DIR"/height"
+
   REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+
+  echo "$HEIGHT" > $ALT_DUP_DATA_DIR"/height"
 
   # HARDLINK SWITCHER - 2
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"

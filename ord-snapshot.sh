@@ -61,7 +61,11 @@ HEIGHT=$(bitcoin-cli "${BITCOIN_CLI_OPTIONS[@]}" getblockcount)
 echo "HEIGHT is $HEIGHT"
 echo "Begin indexing.."
 
+echo "indexing" > $SNAPSHOT_DATA_DIR"/height"
+
 REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$SNAPSHOT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+
+echo "$HEIGHT" > $SNAPSHOT_DATA_DIR"/height"
 
 echo "REORG is $REORG"
 
