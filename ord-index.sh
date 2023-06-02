@@ -91,6 +91,15 @@ then
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
   ln $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
+  RUNNING=$(ps -fu $UID | grep "ord" | grep "data-dir" | grep -v "$SNAPSHOT_DATA_DIR" | grep "index-sats index")
+
+  if [ ! -z "${RUNNING}" ]; then 
+    echo "Still running.."
+    # UNLOCK
+    rm "$ALT_DATA_DIR$NETWORK/lock"
+    exit
+  fi
+
   REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
 
   # HARDLINK SWITCHER - 2
