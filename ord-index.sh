@@ -83,7 +83,7 @@ echo "Begin indexing.."
 
 echo "indexing" > $ALT_DATA_DIR$NETWORK"/height"
 
-REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+REORG=$(ord@cake "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
 
 echo "$HEIGHT" > $ALT_DATA_DIR$NETWORK"/height"
 
@@ -106,7 +106,7 @@ then
 
   echo "indexing" > $ALT_DUP_DATA_DIR$NETWORK"/height"
 
-  REORG=$(ord@afwcxx "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
+  REORG=$(ord@cake "${ORD_CLI_OPTIONS[@]}" --data-dir=$ALT_DUP_DATA_DIR --index-sats index 2>&1 | grep -P 'reorg')
 
   echo "$HEIGHT" > $ALT_DUP_DATA_DIR$NETWORK"/height"
 
