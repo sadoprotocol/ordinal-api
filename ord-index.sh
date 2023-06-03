@@ -79,6 +79,8 @@ echo "HEIGHT is $HEIGHT"
 rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
 
+sleep 1
+
 echo "Begin indexing.."
 
 echo "indexing" > $ALT_DATA_DIR$NETWORK"/height"
@@ -91,9 +93,13 @@ echo "REORG is $REORG"
 
 if [ -z "$REORG" ]
 then
+  sleep 1
+
   # HARDLINK SWITCHER - 1
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
   ln $ALT_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+
+  sleep 1
 
   RUNNING=$(ps -fu $UID | grep "ord" | grep "data-dir" | grep -v "$SNAPSHOT_DATA_DIR" | grep "index-sats index")
 
@@ -110,9 +116,13 @@ then
 
   echo "$HEIGHT" > $ALT_DUP_DATA_DIR$NETWORK"/height"
 
+  sleep 1
+
   # HARDLINK SWITCHER - 2
   rm $DEFAULT_DATA_DIR$NETWORK"/index.redb"
   ln $ALT_DUP_DATA_DIR$NETWORK"/index.redb" $DEFAULT_DATA_DIR$NETWORK"/index.redb"
+
+  sleep 1
 
   # UNLOCK
   rm "$ALT_DATA_DIR$NETWORK/lock"
