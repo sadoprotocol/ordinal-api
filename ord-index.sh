@@ -135,9 +135,6 @@ then
 else
   echo "PENDING: Perform self reorg recovery"
 
-  # UNLOCK
-  rm "$ALT_DATA_DIR$NETWORK/lock"
-
   touch "$ALT_DATA_DIR$NETWORK/reorg"
   echo "Has reorg.."
 fi
